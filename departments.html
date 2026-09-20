@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <title>EPIC Júnior</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: #ee915a;
+      background: #303030;
+      line-height: 1.5;
+    }
+
+    header, footer {
+      padding: 16px clamp(20px, 5vw, 48px);
+      background: #252525;
+      color: #ee915a;
+      display: flex;
+      align-items: center;
+    }
+
+    header {
+      position: relative;
+      z-index: 0;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: -20px;
+      left: 0;
+      height: 20px;
+      background: linear-gradient(to bottom, #252525 0%, #303030 70%);
+      pointer-events: none;
+    }
+
+    footer {
+      position: relative;
+      z-index: 0;
+    }
+
+    footer::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      right: 0;
+      left: 0;
+      height: 20px;
+      background: linear-gradient(to bottom, #303030 0%, #252525 100%);
+      pointer-events: none;
+    }
+
+    main {
+      max-width: 800px;
+      margin: clamp(28px, 6vw, 56px) auto;
+      padding: 0 clamp(20px, 5vw, 32px);
+    }
+
+    h1, h2, h3, h4, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 0;
+      font-size: clamp(1.35rem, 5vw, 2rem);
+    }
+
+    h2 {
+      font-size: clamp(1.65rem, 7vw, 2.35rem);
+      line-height: 1.15;
+    }
+
+    .introducao {
+      margin-bottom: 32px;
+    }
+
+    .departamentos {
+      margin-bottom: 32px;
+    }
+
+    .lista-departamentos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .departamento {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #ffffff14;
+      color: #ffffff;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .icone-departamento {
+      display: inline-flex;
+      flex: 0 0 auto;
+      color: inherit;
+    }
+
+    .icone-departamento svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+    }
+
+    .questao {
+      margin-top: 24px;
+      padding: clamp(18px, 5vw, 24px);
+      border-radius: 12px;
+      background: #ffffff14;
+      color: #ffffff;
+    }
+
+    .opcoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .opcoes button {
+      min-height: 44px;
+      padding: 11px 16px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #303030;
+      color: #ffffff;
+      font: inherit;
+      text-align: left;
+    }
+
+    .opcoes button:hover {
+      background: #ee915a;
+    }
+
+    .opcoes button:focus-visible {
+      outline: 3px solid #ee915a;
+      outline-offset: 2px;
+    }
+
+    .imagem {
+      width: 50px;
+      height: 50px;
+      margin-right: 16px;
+      flex: 0 0 auto;
+    }
+
+    footer {
+      justify-content: start;
+      text-align: start;
+      font-size: 0.7rem;
+    }
+
+    footer p {
+      margin-bottom: 0;
+    }
+
+    .departamentosCol {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5%
+    }
+
+    #quiz {
+      margin-top: 40px;
+    }
+
+    /* Durante o questionário, mantemos o foco apenas nas perguntas. */
+    body.quiz-ativo .introducao,
+    body.quiz-ativo .departamentos,
+    body.quiz-ativo footer {
+      display: none;
+    }
+
+    body.quiz-ativo #quiz {
+      margin-top: 0;
+    }
+
+    .quiz-inicio, .resultado {
+      padding: clamp(24px, 7vw, 40px);
+      border: 1px solid #ffffff24;
+      border-radius: 16px;
+      background: #ffffff14;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .quiz-inicio p, .resultado p {
+      color: #c7c6c8;
+    }
+
+    .etiqueta {
+      margin-bottom: 8px;
+      color: #ee915a !important;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .botao-principal, .botao-secundario {
+      min-height: 48px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .botao-principal {
+      background: #ee915a;
+      color: #ffffff;
+    }
+
+    .botao-principal:hover {
+      background: #ffac7b;
+    }
+
+    .botao-principal:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .botao-secundario {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid #ffffff55;
+    }
+
+    .botao-secundario:hover {
+      background: #ffffff14;
+    }
+
+    .progresso-cabecalho {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 9px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .progresso {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #ffffff24;
+    }
+
+    .progresso-preenchimento {
+      height: 100%;
+      border-radius: inherit;
+      background: #ee915a;
+      transition: width 180ms ease;
+    }
+
+    .quiz-fluxo .questao {
+      margin-top: 20px;
+    }
+
+    .questao h3 {
+      margin-bottom: 20px;
+      font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+      line-height: 1.3;
+    }
+
+    .opcoes button {
+      flex: 1 1 220px;
+      border: 1px solid transparent;
+    }
+
+    .opcoes button.selecionada {
+      border-color: #ee915a;
+      background: #ee915a;
+      color: #252525;
+      font-weight: 700;
+    }
+
+    .controlos-quiz {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .resultado-departamento {
+      margin: 12px 0 8px;
+      color: #ee915a;
+      font-size: clamp(1.7rem, 7vw, 2.4rem);
+    }
+
+    @media (max-width: 540px) {
+      header {
+        padding: 14px 20px;
+      }
+
+      .imagem {
+        width: 42px;
+        height: 42px;
+        margin-right: 12px;
+      }
+
+      .lista-departamentos {
+        grid-template-columns: 1fr;
+      }
+
+      .opcoes {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .opcoes button {
+        width: 100%;
+      }
+
+      .controlos-quiz .botao-principal {
+        flex: 1;
+      }
+
+      .departamentosCol {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Logótipo da EPIC Júnior" class="imagem">
+        <h1>EPIC Júnior</h1>
+    </header>
+    <main>
+      <section class="introducao">
+          <h2 style="color:#ffffff">Descobre já o departamento no qual serás mais <span style="color:#ee915a">EPICO!</span></h2>
+          <p style="color:#9b9a9d">Responde a este pequeno questionários e descobre em qual dos nossos departamentos te enquadras melhor.</p>
+      </section>
+      <section class="departamentos" aria-labelledby="titulo-departamentos">
+        <h3 id="titulo-departamentos" style="font-size:larger; text-align: center;">Os Nossos Departamentos</h3>
+        <div class="lista-departamentos">
+            <div class="departamentosCol">
+                <div class="departamento" style="color:#b4d8de">
+                    <span class="icone-departamento" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    </span>
+                    <span>Comercial</span>
+                </div>
+                <div class="departamento" style="color:#f0c47d">
+                  <span class="icone-departamento" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+                  </span>
+                  <span>Marketing</span>
+                </div>
+            </div>
+            <div class="departamentosCol">
+                <div class="departamento" style="color:#b4c8aa">
+                  <span class="icone-departamento" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket preview-icon"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg>
+                  </span>
+                  <span>Projetos</span>
+                </div>
+                <div class="departamento" style="color:#f8a39d">
+                  <span class="icone-departamento" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg>
+                  </span>
+                  <span>Qualidade</span>
+                </div>
+            </div>
+            <div class="departamentosCol">
+                <div class="departamento" style="color:#dec9e9">
+                  <span class="icone-departamento" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </span>
+                  <span>Recursos Humanos</span>
+                </div>
+            </div>
+        </div>
+      </section>
+      <section id="quiz" aria-label="Questionário">
+        <div class="quiz-inicio" id="quiz-inicio">
+          <!--<p class="etiqueta">Questionário EPICo</p>-->
+          <h3 style="font-size: larger;">Pronto para descobrir o teu departamento ideal?</h3>
+          <p>Responde a 7 perguntas rápidas. Não existem respostas certas ou erradas.</p>
+          <button type="button" class="botao-principal" id="iniciar-quiz">Começar Questionário</button>
+        </div>
+
+        <div class="quiz-fluxo" id="quiz-fluxo" hidden>
+          <div class="progresso-cabecalho">
+            <span id="contador-questao">Questão 1 de 7</span>
+            <span id="percentagem-progresso">14%</span>
+          </div>
+          <div class="progresso" role="progressbar" aria-label="Progresso do questionário" aria-valuemin="0" aria-valuemax="7" aria-valuenow="1">
+            <div class="progresso-preenchimento" id="progresso-preenchimento"></div>
+          </div>
+          <div class="questao" id="cartao-questao" tabindex="-1"></div>
+          <div class="controlos-quiz">
+            <button type="button" class="botao-secundario" id="questao-anterior">Anterior</button>
+            <button type="button" class="botao-principal" id="proxima-questao" disabled>Próxima Pergunta</button>
+          </div>
+        </div>
+
+        <div class="resultado" id="resultado" hidden aria-live="polite" tabindex="-1">
+          <p class="etiqueta">O teu resultado</p>
+          <h3>O departamento mais <bold>EPICO</bold> para ti é</h3>
+          <h2 class="resultado-departamento" id="nome-resultado"></h2>
+          <p id="descricao-resultado"></p>
+          <button type="button" class="botao-principal" id="refazer-quiz">Refazer Questionário</button>
+        </div>
+      </section>
+    </main>
+    <footer>
+        <p style="color:#ffffff52">© 2026 EPIC Júnior - Universidade do Minho - All rights reserved</p>
+    </footer>
+    <script>
+    const questoes = [
+        {
+            texto: "Tens de organizar uma atividade para várias pessoas. Por onde começarias?",
+            opcoes: [
+            "Perceber quem está envolvido e o que esperam da atividade",
+            "Definir o que é necessário fazer e começar a montar a atividade",
+            "Criar uma lista de tarefas e verificar se nada fica por fazer",
+            "Pensar numa forma de tornar a atividade interessante e apelativa",
+            "Perceber quem pode estar disponível e distribuir responsabilidades"
+            ]
+        },
+        {
+            texto: "Alguém te apresenta uma ideia que parece interessante. O que fazes?",
+            opcoes: [
+            "Tento perceber se existe alguém que possa ter interesse nessa ideia",
+            "Começo a pensar em como transformar a ideia em algo concreto",
+            "Questiono o que pode correr mal e o que seria necessário validar",
+            "Penso em quem poderia ajudar a desenvolver a ideia",
+            "Penso em como apresentar a ideia para despertar o interesse de outras pessoas"
+            ]
+        },
+        {
+            texto: "Recebes uma tarefa que nunca fizeste antes. Como reages?",
+            opcoes: [
+            "Procuro perceber para quem é a tarefa e qual é o resultado esperado",
+            "Pesquiso, experimento e tento encontrar uma forma de a executar",
+            "Procuro perceber quais são os requisitos e critérios que tenho de cumprir",
+            "Pergunto a alguém com experiência para perceber como lidar com a situação",
+            "Procuro exemplos de como outras pessoas ou empresas abordam a mesma tarefa"
+            ]
+        },
+        {
+            texto: "Descobres que existe um problema que ninguém tinha reparado. O que fazes?",
+            opcoes: [
+            "Penso em quem pode ser afetado pelo problema e aviso as pessoas relevantes",
+            "Tento encontrar uma solução para resolver o problema",
+            "Investigo a origem do problema e verifico se existem outros semelhantes",
+            "Tento perceber quem está envolvido e como podemos trabalhar em conjunto",
+            "Penso na melhor forma de comunicar o problema"
+            ]
+        },
+        {
+            texto: "Tens de convencer alguém a aceitar uma proposta. Como abordarias a situação?",
+            opcoes: [
+            "Tentaria perceber primeiro o que essa pessoa valoriza e adaptar a proposta",
+            "Explicaria concretamente como a proposta resolve o problema",
+            "Apresentaria dados e evidências que sustentassem a proposta",
+            "Procuraria perceber as preocupações da pessoa e criar confiança",
+            "Apresentaria a proposta de uma forma apelativa e memorável"
+            ]
+        },
+        {
+            texto: "A equipa recebe várias tarefas urgentes ao mesmo tempo. O que farias?",
+            opcoes: [
+            "Tentaria perceber quais têm maior impacto nas pessoas externas à equipa",
+            "Definiria uma ordem de execução e começaria pela tarefa mais importante",
+            "Avaliaria os riscos de cada tarefa e os possíveis erros associados",
+            "Verificaria quem tem disponibilidade e como distribuir o trabalho",
+            "Identificaria quais tarefas precisam de ser comunicadas"
+            ]
+        },
+        {
+            texto: "Tens de apresentar um trabalho que fizeste. O que consideras mais importante?",
+            opcoes: [
+            "Mostrar de que forma o trabalho responde às necessidades de quem o vai utilizar",
+            "Explicar como foi construído e demonstrar que funciona",
+            "Apresentar resultados, critérios e evidências de que está correto",
+            "Explicar o contributo das pessoas envolvidas",
+            "Criar uma apresentação visualmente interessante e fácil de memorizar"
+            ]
+        },
+        {
+            texto: "Uma pessoa nova entra na equipa. O que farias naturalmente?",
+            opcoes: [
+            "Apresentaria a pessoa a contactos e explicaria como funciona a relação com o exterior",
+            "Mostraria as ferramentas e explicaria como funcionam os projetos",
+            "Explicaria os procedimentos e regras que é importante conhecer",
+            "Tentaria perceber como a pessoa se está a adaptar e se precisa de ajuda",
+            "Mostraria como a empresa se apresenta e comunica externamente"
+            ]
+        },
+        {
+            texto: "Tens acesso a muitos dados sobre uma determinada situação. O que te desperta mais interesse?",
+            opcoes: [
+            "Perceber o que os dados dizem sobre clientes e oportunidades",
+            "Utilizar os dados para desenvolver ou melhorar uma solução",
+            "Procurar padrões, erros ou situações fora do normal",
+            "Perceber o que os dados dizem sobre as pessoas envolvidas",
+            "Encontrar informação que possa ser transformada em conteúdo relevante"
+            ]
+        },
+        {
+            texto: "Tens de escolher entre duas soluções possíveis. O que farias?",
+            opcoes: [
+            "Escolheria a que melhor responde às necessidades de quem vai utilizar a solução",
+            "Compararia a dificuldade de implementação e escolheria uma abordagem prática",
+            "Compararia riscos, custos, erros possíveis e critérios de qualidade",
+            "Consideraria o impacto que cada opção teria nas pessoas envolvidas",
+            "Pensaria em qual das soluções pode ser mais facilmente apresentada"
+            ]
+        },
+        {
+            texto: "Uma reunião está a ficar confusa e ninguém chega a uma conclusão. O que farias?",
+            opcoes: [
+            "Tentaria perceber quais são as prioridades das pessoas envolvidas",
+            "Tentaria transformar a discussão em tarefas e próximos passos concretos",
+            "Resumiria os pontos de decisão e verificaria se existem informações em falta",
+            "Tentaria garantir que todos têm oportunidade de se expressar",
+            "Tentaria encontrar uma forma simples e clara de apresentar as diferentes ideias"
+            ]
+        },
+        {
+            texto: "Tens liberdade para melhorar uma tarefa que fazes regularmente. O que te ocorreria primeiro?",
+            opcoes: [
+            "Pensar em como tornar a tarefa mais útil para quem recebe o resultado",
+            "Procurar uma ferramenta ou desenvolver algo que torne a tarefa mais rápida",
+            "Identificar erros e criar uma forma de garantir que não voltam a acontecer",
+            "Pensar em como tornar a tarefa mais simples para as pessoas que a executam",
+            "Pensar em como tornar o resultado final mais apelativo"
+            ]
+        },
+        {
+            texto: "Imagina que tens de investigar uma empresa que não conheces. O que procurarias primeiro?",
+            opcoes: [
+            "Quem são os clientes e quais são as suas necessidades",
+            "Que produtos ou soluções desenvolve",
+            "Como funciona, que processos utiliza e onde poderá ter problemas",
+            "Como é constituída a equipa e como trabalha",
+            "Como se apresenta ao público e qual é a sua imagem"
+            ]
+        },
+        {
+            texto: "Alguém critica o teu trabalho. Como reages?",
+            opcoes: [
+            "Tento perceber se o trabalho correspondeu ao que a outra pessoa precisava",
+            "Procuro perceber concretamente o que posso alterar ou melhorar",
+            "Analiso a crítica e verifico se existem factos que a sustentem",
+            "Tento perceber o ponto de vista da pessoa e conversar sobre o assunto",
+            "Penso se a forma como apresentei o trabalho contribuiu para a perceção negativa"
+            ]
+        },
+        {
+            texto: "A empresa vai participar num evento. Em que parte gostarias mais de ajudar?",
+            opcoes: [
+            "Contactar pessoas e criar novas oportunidades para a empresa",
+            "Preparar demonstrações das soluções e responder a questões técnicas",
+            "Garantir que todos os materiais e processos estão corretos e organizados",
+            "Organizar a participação da equipa e acompanhar as pessoas envolvidas",
+            "Preparar o espaço, conteúdos e comunicação do evento"
+            ]
+        },
+        {
+            texto: "Tens de escolher um indicador para acompanhar uma atividade. O que valorizarias mais?",
+            opcoes: [
+            "Que permita perceber se estamos a responder bem às necessidades dos clientes",
+            "Que permita medir o desempenho da solução ou atividade",
+            "Que permita detetar problemas e desvios rapidamente",
+            "Que permita perceber a evolução e o envolvimento das pessoas",
+            "Que permita perceber o alcance e impacto da comunicação"
+            ]
+        },
+        {
+            texto: "No final de um projeto, o que gostarias mais de sentir?",
+            opcoes: [
+            "Que conseguimos criar valor para quem nos procurou",
+            "Que conseguimos construir algo que funciona e resolve um problema",
+            "Que o resultado cumpre os requisitos e que o processo pode ser melhorado",
+            "Que as pessoas envolvidas trabalharam bem e evoluíram com a experiência",
+            "Que conseguimos criar algo que representa bem a empresa"
+            ]
+        }
+    ];
+
+    const totalPerguntas = 7;
+    const departamentos = [
+      {
+        nome: "Comercial",
+        descricao: "Tens facilidade em compreender necessidades, criar relações e identificar oportunidades para a EPIC."
+      },
+      {
+        nome: "Projetos",
+        descricao: "Gostas de transformar ideias em soluções concretas, práticas e que funcionam."
+      },
+      {
+        nome: "Qualidade",
+        descricao: "O teu olhar atento a detalhes, processos e melhoria contínua destaca-se."
+      },
+      {
+        nome: "Recursos Humanos",
+        descricao: "A colaboração, o bem-estar e o desenvolvimento das pessoas são o que mais te move."
+      },
+      {
+        nome: "Marketing",
+        descricao: "Tens uma visão criativa para comunicar ideias e criar impacto junto das pessoas."
+      }
+    ];
+
+    const quizInicio = document.querySelector("#quiz-inicio");
+    const quizFluxo = document.querySelector("#quiz-fluxo");
+    const resultado = document.querySelector("#resultado");
+    const cartaoQuestao = document.querySelector("#cartao-questao");
+    const contadorQuestao = document.querySelector("#contador-questao");
+    const percentagemProgresso = document.querySelector("#percentagem-progresso");
+    const barraProgresso = document.querySelector(".progresso");
+    const progressoPreenchimento = document.querySelector("#progresso-preenchimento");
+    const botaoAnterior = document.querySelector("#questao-anterior");
+    const botaoSeguinte = document.querySelector("#proxima-questao");
+
+    let perguntasAtuais = [];
+    let respostas = [];
+    let indiceAtual = 0;
+
+    function escolherPerguntas() {
+      const perguntasBaralhadas = [...questoes];
+
+      for (let i = perguntasBaralhadas.length - 1; i > 0; i -= 1) {
+        const indiceAleatorio = Math.floor(Math.random() * (i + 1));
+        [perguntasBaralhadas[i], perguntasBaralhadas[indiceAleatorio]] = [
+          perguntasBaralhadas[indiceAleatorio],
+          perguntasBaralhadas[i]
+        ];
+      }
+
+      return perguntasBaralhadas.slice(0, totalPerguntas);
+    }
+
+    function mostrarQuestao() {
+      const questao = perguntasAtuais[indiceAtual];
+      const respostaSelecionada = respostas[indiceAtual];
+      const progresso = Math.round(((indiceAtual + 1) / totalPerguntas) * 100);
+
+      contadorQuestao.textContent = `Questão ${indiceAtual + 1} de ${totalPerguntas}`;
+      percentagemProgresso.textContent = `${progresso}%`;
+      barraProgresso.setAttribute("aria-valuenow", indiceAtual + 1);
+      progressoPreenchimento.style.width = `${progresso}%`;
+      botaoAnterior.hidden = indiceAtual === 0;
+      botaoSeguinte.disabled = respostaSelecionada === undefined;
+      botaoSeguinte.textContent = indiceAtual === totalPerguntas - 1 ? "Ver Resultado" : "Próxima Pergunta";
+
+      cartaoQuestao.innerHTML = `
+        <p class="etiqueta">Escolhe a opção mais parecida contigo</p>
+        <h3>${questao.texto}</h3>
+        <div class="opcoes">
+          ${questao.opcoes.map((opcao, indice) => `
+            <button type="button" class="${respostaSelecionada === indice ? "selecionada" : ""}" data-opcao="${indice}" aria-pressed="${respostaSelecionada === indice}">
+              ${opcao}
+            </button>
+          `).join("")}
+        </div>
+      `;
+
+      cartaoQuestao.querySelectorAll("[data-opcao]").forEach((botao) => {
+        botao.addEventListener("click", () => {
+          respostas[indiceAtual] = Number(botao.dataset.opcao);
+          mostrarQuestao();
+        });
+      });
+    }
+
+    function iniciarQuiz() {
+      perguntasAtuais = escolherPerguntas();
+      respostas = [];
+      indiceAtual = 0;
+      document.body.classList.add("quiz-ativo");
+      quizInicio.hidden = true;
+      resultado.hidden = true;
+      quizFluxo.hidden = false;
+      mostrarQuestao();
+      cartaoQuestao.focus();
+    }
+
+    function mostrarResultado() {
+      const pontuacoes = Array(departamentos.length).fill(0);
+      respostas.forEach((resposta) => {
+        pontuacoes[resposta] += 1;
+      });
+
+      const indiceVencedor = pontuacoes.indexOf(Math.max(...pontuacoes));
+      const departamento = departamentos[indiceVencedor];
+
+      document.querySelector("#nome-resultado").textContent = departamento.nome;
+      document.querySelector("#descricao-resultado").textContent = departamento.descricao;
+      document.body.classList.remove("quiz-ativo");
+      quizFluxo.hidden = true;
+      resultado.hidden = false;
+      resultado.focus();
+    }
+
+    document.querySelector("#iniciar-quiz").addEventListener("click", iniciarQuiz);
+    document.querySelector("#refazer-quiz").addEventListener("click", iniciarQuiz);
+
+    botaoAnterior.addEventListener("click", () => {
+      if (indiceAtual > 0) {
+        indiceAtual -= 1;
+        mostrarQuestao();
+        cartaoQuestao.focus();
+      }
+    });
+
+    botaoSeguinte.addEventListener("click", () => {
+      if (respostas[indiceAtual] === undefined) return;
+
+      if (indiceAtual === totalPerguntas - 1) {
+        mostrarResultado();
+        return;
+      }
+
+      indiceAtual += 1;
+      mostrarQuestao();
+      cartaoQuestao.focus();
+    });
+  </script>
+</body>
+</html>
